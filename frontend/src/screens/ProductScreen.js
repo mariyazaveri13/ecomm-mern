@@ -11,7 +11,6 @@ import {
   ListGroupItem,
 } from 'react-bootstrap';
 import Ratings from '../components/Ratings';
-import products from '../products';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
