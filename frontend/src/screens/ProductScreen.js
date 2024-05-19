@@ -12,10 +12,26 @@ import {
 } from 'react-bootstrap';
 import Ratings from '../components/Ratings';
 import products from '../products';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const ProductScreen = () => {
+  const [product, setProduct] = useState({});
+
   const { id: productId } = useParams();
-  const product = products.find((p) => p._id == productId);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const { data } = await axios.get(`/api/products/${productId}`);
+        setProduct(data);
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    }
+
+    fetchProduct();
+  }, [productId]);
 
   return (
     <>
@@ -65,7 +81,7 @@ const ProductScreen = () => {
                   <Col>Status:</Col>
                   <Col>
                     <strong>
-                      ${product.countInStock > 0 ? 'In stock' : 'Out of stock'}
+                      {product.countInStock > 0 ? 'In stock' : 'Out of stock'}
                     </strong>
                   </Col>
                 </Row>
