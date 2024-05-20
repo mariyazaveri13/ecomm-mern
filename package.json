@@ -9,8 +9,8 @@
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import":"node backend/seeder.js",
-    "data:destroy":"node backend/seeder.js -d"
+    "data:import": "node backend/seeder.js",
+    "data:destroy": "node backend/seeder.js -d"
   },
   "author": "Mariya",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.0",
     "nodemon": "^3.1.0"
   }
