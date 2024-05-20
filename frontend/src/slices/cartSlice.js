@@ -1,12 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { updateCart } from '../utils/cartUtils';
 
 const initialState = localStorage.getItem('cart')
   ? JSON.parse(localStorage.getItem('cart'))
   : { cartItems: [] };
-
-const addDecimals = (num) => {
-  return (Math.round(num * 100) / 100).toFixed(2);
-};
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -14,38 +11,23 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      const existItem = state.cartItems.map((x) => x._id === item._id);
+      console.log(item);
+      const existItem = state.cartItems.find((x) => x._id === item._id);
+      console.log({ existItem });
 
       if (existItem) {
+        console.log('in if');
         state.cartItems = state.cartItems.map((x) =>
           x._id === existItem._id ? item : x
         );
       } else {
         state.cartItems = [...state.cartItems, item];
+        console.log('in else');
       }
 
-      //calculate items price
-      state.itemsPrice = addDecimals(
-        state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
-      );
+      console.log('state.cartitem-->>', state.cartItems);
 
-      //calculate shipping price (if order > $100 then free shipping else $10 shipping)
-      state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
-
-      //calculate tax price(15%)
-      state.taxPrice = addDecimals(
-        Number((0.15 * state.itemsPrice).toFixed(2))
-      );
-
-      //calculate total price
-      state.totalPrice = (
-        Number(state.itemsPrice) +
-        Number(state.shippingPrice) +
-        Number(state.taxPrice)
-      ).toFixed(2);
-
-      //save to local storage
-      localStorage.setItem('cart', JSON.stringify(state));
+      return updateCart(state);
     },
   },
 });
