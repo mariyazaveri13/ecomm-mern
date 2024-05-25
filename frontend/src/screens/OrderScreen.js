@@ -1,14 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Button,
-  Card,
-  Form,
-} from 'react-bootstrap';
-import React, { useState, useEffect } from 'react';
+import { Row, Col, ListGroup, Image, Button, Card } from 'react-bootstrap';
+import React, { useEffect } from 'react';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
