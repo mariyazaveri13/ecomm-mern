@@ -7,6 +7,7 @@ import Loader from '../../components/Loader';
 import {
   useGetProductsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
 
@@ -26,7 +27,21 @@ const ProductListScreen = () => {
       }
     }
   };
-  const deleteHandler = (id) => {};
+
+  const [deleteProduct, { isLoading: loadingDelet }] =
+    useDeleteProductMutation();
+
+  const deleteHandler = async (id) => {
+    if (window.confirm('Are you sure')) {
+      try {
+        await deleteProduct(id);
+        refetch();
+        toast.success('Product deleted');
+      } catch (error) {
+        toast.error(error?.data?.message || error.error);
+      }
+    }
+  };
 
   return (
     <>
@@ -45,6 +60,7 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+      {loadingDelet && <Loader></Loader>}
       {isLoading ? (
         <Loader></Loader>
       ) : error ? (
