@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Form, Button, FormGroup } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Message from '../../components/Message';
 import FormContainer from '../../components/FormContainer';
 import Loader from '../../components/Loader';
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import {
   useUpdateProductMutation,
   useGetProductDetailsQuery,
+  useUploadProductImageMutation,
 } from '../../slices/productsApiSlice';
 
 const ProductEditScreen = () => {
@@ -30,6 +31,9 @@ const ProductEditScreen = () => {
   const [updateProduct, { isLoading: loadingupdate }] =
     useUpdateProductMutation();
 
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,7 +51,7 @@ const ProductEditScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     const updatedProduct = {
-      _id: productId,
+      productId,
       name,
       description,
       brand,
@@ -63,6 +67,18 @@ const ProductEditScreen = () => {
     } else {
       toast.success('Product updated');
       navigate('/admin/productlist');
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success(res?.message);
+      setImage(res.image);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
   };
 
@@ -82,7 +98,7 @@ const ProductEditScreen = () => {
           <Message variant='danger'>{error}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
-            <FormGroup
+            <Form.Group
               controlId='name'
               className='my-2'>
               <Form.Label>Name</Form.Label>
@@ -91,8 +107,8 @@ const ProductEditScreen = () => {
                 placeholder='Enter name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}></Form.Control>
-            </FormGroup>
-            <FormGroup
+            </Form.Group>
+            <Form.Group
               controlId='price'
               className='my-2'>
               <Form.Label>Price</Form.Label>
@@ -101,8 +117,25 @@ const ProductEditScreen = () => {
                 placeholder='Enter price'
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}></Form.Control>
-            </FormGroup>
-            <FormGroup
+            </Form.Group>
+
+            <Form.Group
+              controlId='image'
+              className='my-2'>
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter image url'
+                value={image}
+                onChange={(e) => setImage}></Form.Control>
+
+              <Form.Control
+                type='file'
+                label='Choose file'
+                onChange={uploadFileHandler}></Form.Control>
+            </Form.Group>
+
+            <Form.Group
               controlId='brand'
               className='my-2'>
               <Form.Label>Brand</Form.Label>
@@ -111,9 +144,9 @@ const ProductEditScreen = () => {
                 placeholder='Enter brand'
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}></Form.Control>
-            </FormGroup>
+            </Form.Group>
 
-            <FormGroup
+            <Form.Group
               controlId='countInStock'
               className='my-2'>
               <Form.Label>Count In Stock</Form.Label>
@@ -124,9 +157,9 @@ const ProductEditScreen = () => {
                 onChange={(e) =>
                   setCountInStock(e.target.value)
                 }></Form.Control>
-            </FormGroup>
+            </Form.Group>
 
-            <FormGroup
+            <Form.Group
               controlId='category'
               className='my-2'>
               <Form.Label>Category</Form.Label>
@@ -135,9 +168,9 @@ const ProductEditScreen = () => {
                 placeholder='Enter Category'
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}></Form.Control>
-            </FormGroup>
+            </Form.Group>
 
-            <FormGroup
+            <Form.Group
               controlId='description'
               className='my-2'>
               <Form.Label>Description</Form.Label>
@@ -146,7 +179,7 @@ const ProductEditScreen = () => {
                 placeholder='Enter description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}></Form.Control>
-            </FormGroup>
+            </Form.Group>
 
             <Button
               type='submit'
