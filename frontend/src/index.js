@@ -41,6 +41,9 @@ const router = createBrowserRouter(
         path='/'
         element={<HomeScreen />}></Route>
       <Route
+        path='/page/:pageNumber'
+        element={<HomeScreen />}></Route>
+      <Route
         path='/products/:id'
         element={<ProductScreen />}></Route>
       <Route
@@ -81,6 +84,9 @@ const router = createBrowserRouter(
           element={<OrderListScreen />}></Route>
         <Route
           path='/admin/productlist'
+          element={<ProductListScreen />}></Route>
+        <Route
+          path='/admin/productlist/:pageNumber'
           element={<ProductListScreen />}></Route>
         <Route
           path='/admin/product/:id/edit'
