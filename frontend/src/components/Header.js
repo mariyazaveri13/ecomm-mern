@@ -9,6 +9,7 @@ import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SearchBox from './SearchBox';
+import { resetCart } from '../slices/cartSlice';
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -23,10 +24,12 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      dispatch(resetCart());
       navigate('/login');
       toast('Logged out successfully');
     } catch (error) {
       console.log(error?.data?.message || error.error);
+      toast.error(error?.data?.message || error.error);
     }
   };
 
